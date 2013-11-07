@@ -1,0 +1,89 @@
+<?php
+class Assets extends Wire implements Module
+{
+    protected $content_type = array(
+        '.css'      => 'text/css',
+        '.gif'      => 'image/gif',
+        '.jpe'      => 'image/jpeg',
+        '.jpeg'     => 'image/jpeg',
+        '.jpg'      => 'image/jpeg',
+        '.js'       => 'text/javascript',
+        '.png'      => 'image/png',
+    );
+    
+    protected $supported_mimetype = array(
+        'text/plain',
+        'image/gif',
+        'image/jpeg',        
+        'image/png',
+    );
+    
+    /**
+	 * getModuleInfo is a module required by all modules to tell ProcessWire about them
+	 *
+	 * @return array
+	 *
+	 */
+    public static function getModuleInfo() 
+    {
+        return array(
+            'title' => 'Asset management, when you move your index.php to some where else', 
+            'version' => 101, 
+            'summary' => '',
+            'author' => 'Hari KT <kthari85@gmail.com>',
+            'href' => 'http://harikt.com/',
+            'singular' => true, 
+            'autoload' => true, 
+        );
+    }
+    
+    public function init()
+    {
+        $this->addHookBefore('ProcessPageView::pageNotFound', $this, 'displayAsset');
+    }
+
+    /**
+     * 
+     * If the supported type of file exists get the file and show it.
+     * 
+     * mimetype of css, js is text/plain
+     * 
+     * Even if someone change the .php file to .css or something, 
+     * 
+     * we don't need to serve
+     * 
+     * @param HookEvent $event
+     * 
+     * @return void
+     * 
+     */
+    public function displayAsset($event)
+    {
+        $file = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+        $cachepath = $_SERVER['DOCUMENT_ROOT'] . $file;
+        $realpath =  dirname(dirname(dirname(__DIR__))) . $file;
+        $extension = '.' . parse_url(pathinfo($_SERVER['REQUEST_URI'], PATHINFO_EXTENSION), PHP_URL_PATH);
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mimetype = finfo_file($finfo, $realpath);
+        if (array_key_exists($extension, $this->content_type)             
+            && in_array($mimetype, $this->supported_mimetype)
+        ) {
+            echo $realpath;
+            exit;
+            if (file_exists($realpath)) {
+                // make sure we have a dir for it
+                $dir = dirname($cachepath);
+                if (! is_dir($dir)) {
+                    @mkdir($dir, 0755, true);
+                }
+                // copy from the source package to the target cache dir for the
+                // next time this package asset is requested
+                @copy($realpath, $cachepath);
+                header("Content-type: {$this->content_type[$extension]}");
+                echo file_get_contents($realpath);
+                exit;
+            }
+        }        
+        return;
+    }
+}
