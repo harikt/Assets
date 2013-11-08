@@ -16,6 +16,12 @@ is encrypted data.
 So the mimetype detect it as http://www.mime-type.net/application/x-elc/, 
 so is not served.
 
+These modules are provided in core of Processwire, so are marked as exceptional cases.
+
+```php
+'/wire/modules/Jquery/JqueryTableSorter/JqueryTableSorter.js'
+```
+
 You want to give appropriate permissions for the assets to write the `css`,
 `images` and `js` in the `web` root folder.
 

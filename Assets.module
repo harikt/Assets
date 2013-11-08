@@ -18,6 +18,11 @@ class Assets extends Wire implements Module
         'image/x-icon',
         'image/jpeg',
         'image/png',
+        'text/html'
+    );
+    
+    protected $exceptions = array(
+        '/wire/modules/Jquery/JqueryTableSorter/JqueryTableSorter.js'
     );
     
     /**
@@ -66,10 +71,11 @@ class Assets extends Wire implements Module
         $realpath =  dirname(dirname(dirname(__DIR__))) . $file;
         $extension = '.' . parse_url(pathinfo($_SERVER['REQUEST_URI'], PATHINFO_EXTENSION), PHP_URL_PATH);
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
-        $mimetype = finfo_file($finfo, $realpath);
-        if (array_key_exists($extension, $this->content_type)             
-            && in_array($mimetype, $this->supported_mimetype)
-        ) {            
+        $mimetype = finfo_file($finfo, $realpath);        
+        if ((array_key_exists($extension, $this->content_type)             
+            && in_array($mimetype, $this->supported_mimetype))
+            || in_array($file, $this->exceptions)
+        ) {
             if (file_exists($realpath)) {
                 // make sure we have a dir for it
                 $dir = dirname($cachepath);
