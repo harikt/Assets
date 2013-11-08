@@ -4,6 +4,7 @@ class Assets extends Wire implements Module
     protected $content_type = array(
         '.css'      => 'text/css',
         '.gif'      => 'image/gif',
+        '.ico'      => 'image/x-icon',
         '.jpe'      => 'image/jpeg',
         '.jpeg'     => 'image/jpeg',
         '.jpg'      => 'image/jpeg',
@@ -14,7 +15,8 @@ class Assets extends Wire implements Module
     protected $supported_mimetype = array(
         'text/plain',
         'image/gif',
-        'image/jpeg',        
+        'image/x-icon',
+        'image/jpeg',
         'image/png',
     );
     
@@ -28,9 +30,9 @@ class Assets extends Wire implements Module
     {
         return array(
             'title' => 'Asset management, when you move your index.php to some where else', 
-            'version' => 101, 
+            'version' => 100, 
             'summary' => '',
-            'author' => 'Hari KT <kthari85@gmail.com>',
+            'author' => 'Hari KT',
             'href' => 'http://harikt.com/',
             'singular' => true, 
             'autoload' => true, 
@@ -67,9 +69,7 @@ class Assets extends Wire implements Module
         $mimetype = finfo_file($finfo, $realpath);
         if (array_key_exists($extension, $this->content_type)             
             && in_array($mimetype, $this->supported_mimetype)
-        ) {
-            echo $realpath;
-            exit;
+        ) {            
             if (file_exists($realpath)) {
                 // make sure we have a dir for it
                 $dir = dirname($cachepath);

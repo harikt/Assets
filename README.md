@@ -18,3 +18,18 @@ so is not served.
 
 You want to give appropriate permissions for the assets to write the `css`,
 `images` and `js` in the `web` root folder.
+
+## Other media types
+
+We may need to add other media types like mp3, mp4, audio etc.
+
+## Thanks
+
+Special thanks to [Paul M Jones](http://paul-m-jones.com/) and 
+[Aura PHP](http://auraphp.com)
+
+Some parts of the code are from 
+[Aura.Framework](https://github.com/auraphp/Aura.Framework/blob/f122f77b7f97d3bec9dbf930a66e706d2b89b6f8/src/Aura/Framework/Web/Asset/Page.php#L123-L147)
+and [Aura.View](https://github.com/auraphp/Aura.View/blob/613286b1122bd7ef78a12550afdb10f78813d040/src/Aura/View/FormatTypes.php#L31-L113)
+
+> Aura is a collection of libraries to build your own framework.
