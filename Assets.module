@@ -95,19 +95,15 @@ class Assets extends Wire implements Module
                 if (! is_dir($dir)) {
                     @mkdir($dir, 0755, true);
                 }
-                if (! symlink($realpath, $cachepath)) {
+                if (symlink($realpath, $cachepath)) {
+                    // @copy($realpath, $cachepath);
+                    header("Content-type: {$this->content_type[$extension]}");
+                    echo file_get_contents($realpath);
+                    exit;
+                } else {
                     // failed
                     // @todo if in debug mode show the error that not able to create symbolic link
                 }
-                
-                /*                                
-                // copy from the source package to the target cache dir for the
-                // next time this package asset is requested
-                @copy($realpath, $cachepath);
-                */
-                header("Content-type: {$this->content_type[$extension]}");
-                echo file_get_contents($realpath);
-                exit;
             }
         }        
         return;
