@@ -8,13 +8,8 @@ class Assets extends Wire implements Module
         '.jpe'      => 'image/jpeg',
         '.jpeg'     => 'image/jpeg',
         '.jpg'      => 'image/jpeg',
-        '.js'       => 'text/javascript',
-        '.js' 	    => 'application/x-javascript',
-        '.js'       => 'application/javascript',
-        '.js'       => 'application/ecmascript',
-        '.js'       => 'text/javascript',
-        '.js'       => 'text/ecmascript',
         '.png'      => 'image/png',
+        '.js'       => 'text/javascript',        
     );
     
     // http://reference.sitepoint.com/html/mime-types-full
@@ -83,12 +78,15 @@ class Assets extends Wire implements Module
         $cachepath = $_SERVER['DOCUMENT_ROOT'] . $file;
         $realpath =  dirname(dirname(dirname(__DIR__))) . $file;
         $extension = '.' . parse_url(pathinfo($_SERVER['REQUEST_URI'], PATHINFO_EXTENSION), PHP_URL_PATH);
+        /**
+         * Mime detection becomes a hell, depending on PHP versions
+         */
         $finfo = new finfo(FILEINFO_MIME_TYPE);
-        $mimetype = $finfo->file($realpath);        
-        if ((array_key_exists($extension, $this->content_type)             
-            && in_array($mimetype, $this->supported_mimetype))
+        $mimetype = $finfo->buffer($realpath);
+        if ((array_key_exists($extension, $this->content_type) 
+            && in_array($mimetype, $this->supported_mimetype)) 
             || in_array($file, $this->exceptions)
-        ) {
+        ) {            
             if (file_exists($realpath)) {
                 // make sure we have a dir for it
                 $dir = dirname($cachepath);
