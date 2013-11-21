@@ -9,7 +9,8 @@ class Assets extends Wire implements Module
         '.jpeg'     => 'image/jpeg',
         '.jpg'      => 'image/jpeg',
         '.png'      => 'image/png',
-        '.js'       => 'text/javascript',        
+        '.js'       => 'text/javascript',
+        '.woff'     => 'application/font-woff',
     );
     
     // http://reference.sitepoint.com/html/mime-types-full
@@ -27,6 +28,7 @@ class Assets extends Wire implements Module
         'application/ecmascript',
         'text/javascript',
         'text/ecmascript',
+        'application/font-woff',
     );
     
     protected $exceptions = array(
@@ -77,7 +79,7 @@ class Assets extends Wire implements Module
         $file = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
         $cachepath = $_SERVER['DOCUMENT_ROOT'] . $file;
         $realpath =  dirname(dirname(dirname(__DIR__))) . $file;
-        $extension = '.' . parse_url(pathinfo($_SERVER['REQUEST_URI'], PATHINFO_EXTENSION), PHP_URL_PATH);
+        $extension = '.' . pathinfo(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), PATHINFO_EXTENSION);
         /**
          * Mime detection becomes a hell, depending on PHP versions
          */
